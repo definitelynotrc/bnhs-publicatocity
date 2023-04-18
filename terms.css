@@ -1,0 +1,37 @@
+text-transform: uppercase;
+}
+.terms-text h4{
+font-size: 13px;
+text-align: justify;
+padding: 0 40px;
+}
+.terms-box h4 span{
+color: rgb(245, 68, 68);
+text-transform: uppercase;
+}
+.buttons{
+display: flex;
+padding: 0 20px;
+justify-content: space-between;
+padding-bottom: 50px;
+}
+.btn{
+height: 50px;
+width: calc(50% - 6px);
+border: 0;
+border-radius: 6px;
+font-size: 19px;
+font-weight: 500;
+color: #fff;
+transition: .3s linear;
+cursor: pointer;
+}
+.red-btn{
+background-color: rgb(245, 68, 68);
+}
+.gray-btn{
+background-color: #282828;
+}
+.btn:hover{
+opacity: .6;
+}

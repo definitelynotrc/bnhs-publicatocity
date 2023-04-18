@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Redressed&display=swap');
+body {
+    padding:0px;
+    margin:0px;
+    background-color: #eee;
+    font-family: 'Poppins', sans-serif;
+}
+.sidebaractive {
+    transform: translate(0%) !important;
+}
+.sidebar {
+	position:fixed;
+    width: 300px;
+    background: grey;
+    height: 100vh;
+    position: fixed;
+    padding: 20px;
+    box-sizing: border-box;
+    left: 0;
+    transform: translate(-100%);
+    transition: all 0.3s linear 0s;
+    z-index:100;
+}
+
+ul.nav-links {
+flex-direction:column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-top: 50px;
+}
+ul.nav-links li a {
+	
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    display: inline-block;
+    text-decoration: none;
+}
+ul.social-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-top:40px
+}
+ul.social-links li {
+    display: inline-block;
+    margin-right: 10px;
+    height: 40px;
+    width: 40px;
+    background: #fff;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 40px;
+}
+ul.social-links li a {
+	flex-direction:column;
+    color: #b912b4;
+}
+.nav-header {
+    position: absolute;
+    right: 30px;
+    top: 10px;
+    font-size: 30px;
+    cursor: pointer;
+}
+.closebtn {
+    position: absolute;
+    right: 15px;
+    font-size: 30px;
+    top: 0px;
+    color: #fff;
+    cursor: pointer;
+}

@@ -1,0 +1,86 @@
+body {
+	margin: 0;
+	padding; 0;
+	background: url(loginbg.jpg);
+	background-size: cover;
+	background-position: center;
+	font-family: Verdana;
+}
+
+.loginbox {
+	width: 320px;
+	height:420px;
+	background: #C0C0C0;
+	opacity: 70%;
+	color: #000000;
+	top: 50%;
+	left: 50%;
+	position: absolute;
+	transform: translate(-50%,-50%);
+	box-sizing: border-box;
+	padding: 70px 30px;
+	border-radius: 40px;
+}
+
+
+h1{
+	margin; 0;
+	padding: 0 0 20px;
+	text-align: center;
+	font-size: 18px;
+}
+
+.loginbox p{
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+}
+
+.loginbox input {
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.loginbox input[type="text"], input[type="password"]
+{
+	border: none;
+	border-bottom: 1px solid  #a9a9a9;
+	background: transparent;
+	outline: none;
+	height: 40px;
+	color: #fff;
+	font-size: 16px;
+}
+	
+.loginbox input[type="submit"]
+{
+	border: none;
+	outline: none;
+	height: 40px;
+	background: #fb2525;
+	color: #fff;
+	font-size: 18px;
+	border-radius: 20px;
+}
+
+.loginbox input[type="submit"]hover
+{
+	cursor: pointer;
+	background: #19A7CE;
+	color: #000000;
+}
+
+.loginbox a
+{
+	text-decoration: none;
+	font-size: 12px;
+	line-height: 20px;
+	color: #000000;
+}
+
+.loginbox a:hover 
+{
+	color:#19A7CE;
+}
+
+<a href="#">Don't have an account?</a><br>
