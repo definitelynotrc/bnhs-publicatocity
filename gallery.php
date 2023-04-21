@@ -1,5 +1,6 @@
 <?php
 require_once "controllers/Gallery.controller.php";
+$profile_pic = isset($context["pfp"]) ? $context["pfp"] : "./img/cyan.png";
 
 $isLoggedIn = isset($_SESSION['user']);
 
@@ -122,8 +123,12 @@ $isLoggedIn = isset($_SESSION['user']);
     <div class="cols__container">
       <div class="left__col">
         <div class="img__container">
-          <img src="./img/cyan.png" alt="Cabalar" />
+          <div class="overlay change-pfp-btn" v-on:click="previewUpload2">
+            <i class='fa fa-pen' style="color: #ffffff90; margin-top: 70%;"></i>
+          </div>
+          <img src="<?= $profile_pic ?>" class="pfp" alt="user-profile" />
           <span></span>
+          <input type="file" value="" v-on:change="setPreview2" name="change-pfp" hidden>
         </div>
         <h2><?= $_SESSION["user"]["first_name"] ?> <?= $_SESSION["user"]["last_name"] ?></h2>
         <p>@<?= $_SESSION["user"]["username"] ?></p>
@@ -157,7 +162,12 @@ $isLoggedIn = isset($_SESSION['user']);
             <li><a href="./userprofile.php">photos</a></li>
             <li><a href="./gallery.php" class="active">galleries</a></li>
           </ul>
-          <button class="<?= $isLoggedIn ? "secondary" : "Follow" ?>"><?= $isLoggedIn ? "Edit Profile" : "Follow" ?></button>
+          <template v-if="imageToUpload != null">
+            <button v-on:click="saveUpload2">Save Profile Picture</button>
+          </template>
+          <template v-else>
+            <button class="<?= $isLoggedIn ? "secondary" : "Follow" ?>"><?= $isLoggedIn ? "Edit Profile" : "Follow" ?></button>
+          </template>
         </nav>
         <div v-if="result != null" :class="{success: result.success, error: !result.success}" class="msg" v-cloak>
           {{ result["message"] }}
@@ -203,10 +213,7 @@ $isLoggedIn = isset($_SESSION['user']);
       sidebar.classList.toggle("sidebaractive")
     })
 
-    // 
-
     createApp({
-
       methods: {
         previewUpload(e) {
           document.querySelector("[name='file-to-upload']").click();
@@ -272,10 +279,65 @@ $isLoggedIn = isset($_SESSION['user']);
           }
 
         },
+
+        previewUpload2(e) {
+          document.querySelector("[name='change-pfp']").click();
+        },
+
+        saveUpload2(e) {
+          const form = new FormData();
+          const img = this.imageToUpload;
+          const reader = new FileReader();
+          reader.readAsDataURL(img);
+          form.append("pfp", img)
+
+          // submit to this page with post on request
+          // fetch 
+          fetch('./upload-gallery.php', {
+              method: "POST",
+              body: form,
+            })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(data => {
+              // Do something with the JSON data
+              console.log(data);
+              alert("Profile Picture Updated")
+              window.location.reload();
+            })
+            .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+            });
+
+        },
+
+        setPreview2(e) {
+          const file = e.currentTarget.files[0];
+
+          if (file.type.startsWith('image/')) {
+            // Create a new FileReader object
+            const reader = new FileReader();
+
+            // When the FileReader has loaded the image, set the preview element's source to the image data
+            reader.addEventListener('load', () => {
+              // create random id
+              document.querySelector(".pfp").src = reader.result;
+              this.imageToUpload = file;;
+            });
+
+            // Read the image file as a data URL
+            reader.readAsDataURL(file);
+          }
+        },
       },
       data() {
         return {
           imageToUploads: [],
+          imageToUpload: null,
           result: null
         }
       }

@@ -15,8 +15,13 @@ class UserGallery extends DatabaseHandler
 
 
     foreach ($_FILES as $filename => $f) {
-      $target_dir = "uploads/";
-      $file_name = time() . "-" . basename($f["name"]);
+      // random text
+      // create directory
+      $target_dir = "uploads/gallery-" . $user_id . "/";
+      if (!file_exists($target_dir)) {
+        mkdir("uploads/gallery-" . $user_id, 0777, true);
+      }
+      $file_name = substr(md5(mt_rand()), 0, 7) . "-" . basename($f["name"]);
       $target_file = $target_dir . $file_name;
       $check = getimagesize($f["tmp_name"]);
       if ($check !== false) {
@@ -32,6 +37,7 @@ class UserGallery extends DatabaseHandler
 
     try {
       $sql = "INSERT INTO user_gallery (user, gallery_url) VALUES ";
+
       foreach ($uploadedFilesPath as $path) {
         if (end($uploadedFilesPath) == $path) {
           $sql .= "($user_id, '$path');";
@@ -40,11 +46,22 @@ class UserGallery extends DatabaseHandler
           $sql .= "($user_id, '$path'),";
         }
       }
+
       $stmt = $conn->prepare($sql);
       $stmt->execute();
-      return ["success" => True, "message" => "All files are uploaded."];
+      return ["success" => True, "message" => "All files are uploaded.", "sql" => $sql];
     } catch (PDOException $e) {
       return ["success" => False, "message" => $e->getMessage(), "sql" => $sql];
     }
+  }
+
+  public function getPhotosFromGallery(int $user_id)
+  {
+    $conn = $this::connect();
+    $sql = "SELECT * FROM user_gallery WHERE user = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$user_id]);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
   }
 }

@@ -2,6 +2,7 @@
 require_once "controllers/Profile.controller.php";
 
 $isLoggedIn = isset($_SESSION['user']);
+$profile_pic = isset($context["pfp"]) ? $context["pfp"] : "./img/cyan.png";
 
 ?>
 
@@ -113,13 +114,17 @@ $isLoggedIn = isset($_SESSION['user']);
 </div>
 
 <body>
-  <div class="header__wrapper">
+  <div id="root" class="header__wrapper">
     <header></header>
     <div class="cols__container">
       <div class="left__col">
         <div class="img__container">
-          <img src="./img/cyan.png" alt="Cabalar" />
+          <div class="overlay change-pfp-btn" v-on:click="previewUpload">
+            <i class='fa fa-pen' style="color: #ffffff90; margin-top: 70%;"></i>
+          </div>
+          <img src="<?= $profile_pic ?>" class="pfp" alt="user-profile" />
           <span></span>
+          <input type="file" value="" v-on:change="setPreview" name="change-pfp" hidden>
         </div>
         <h2><?= $_SESSION["user"]["first_name"] ?> <?= $_SESSION["user"]["last_name"] ?></h2>
         <p>@<?= $_SESSION["user"]["username"] ?></p>
@@ -153,68 +158,123 @@ $isLoggedIn = isset($_SESSION['user']);
             <li><a href="./userprofile.php" class="active">photos</a></li>
             <li><a href="./gallery.php">galleries</a></li>
           </ul>
-          <button class="<?= $isLoggedIn ? "secondary" : "Follow" ?>"><?= $isLoggedIn ? "Edit Profile" : "Follow" ?></button>
+          <template v-if="imageToUpload != null">
+            <button v-on:click="saveUpload">Save Profile Picture</button>
+          </template>
+          <template v-else>
+            <button class="<?= $isLoggedIn ? "secondary" : "Follow" ?>"><?= $isLoggedIn ? "Edit Profile" : "Follow" ?></button>
+          </template>
         </nav>
         <div class="hero">
-          <div class="img__container">
-            <img src="./img/bianca.jpg">
-          </div>
-          <div class="img__container">
-            <img src="./img/fedlianne.jpg">
-          </div>
-          <div class="img__container">
-            <img src="./img/bianca.jpg">
-          </div>
-          <div class="img__container">
-            <img src="./img/fedlianne.jpg">
-          </div>
-        </div>
+          <?php
 
-        <div class="popup">
-          <button id="close">&times;</button>
-          <h2>Policies</h2>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Expedita distinctio fugiat alias iure qui, commodi minima magni ullam aliquam dignissimos?
-          </p>
-          <a id="gawk" href="#">Thank You</a>
-        </div>
-        <!--Script-->
-        <script type="text/javascript">
-          window.addEventListener("load", function() {
-            setTimeout(
-              function open(event) {
-                document.querySelector(".popup").style.display = "block";
-              },
-              2000
-            )
-          });
-
-
-          document.querySelector("#close").addEventListener("click", function() {
-            document.querySelector(".popup").style.display = "none";
-          });
-
-          document.querySelector("#close").addEventListener("click", function() {
-            document.querySelector(".popup").style.display = "none";
-          });
-          let toggle_bar = document.querySelector(".nav-header");
-
-          let sidebar = document.querySelector(".sidebar");
-
-          toggle_bar.addEventListener("click", function() {
-            if (toggle_bar.firstElementChild.classList.contains("fa-bars")) {
-              toggle_bar.firstElementChild.classList.replace("fa-bars", "fa-times");
-            } else {
-              toggle_bar.firstElementChild.classList.replace("fa-times", "fa-bars");
+          if (isset($context["gallery"]) && count($context["gallery"])) {
+            foreach ($context["gallery"] as $gallery) {
+              echo "<div class='img__container'>";
+              echo "<img src='./{$gallery["gallery_url"]}' alt=''>";
+              echo "</div>";
             }
-            sidebar.classList.toggle("sidebaractive")
-          })
-        </script>
+          } else {
+            echo '<div v-on:click="previewUpload" style="min-height: 280px; max-height: 280px; max-width: 280px; min-width: 280px; display: flex; align-items: center; justify-content:center">';
+            echo '<span style="color: #1f1f1f90; font-size: 1.2rem; text-align: center">No Photos</span>';
+            echo '</div>';
+          }
+          ?>
+        </div>
+
       </div>
     </div>
   </div>
   </div>
   </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script>
+    let toggle_bar = document.querySelector(".nav-header");
+    let sidebar = document.querySelector(".sidebar");
+    toggle_bar.addEventListener("click", function() {
+      if (toggle_bar.firstElementChild.classList.contains("fa-bars")) {
+        toggle_bar.firstElementChild.classList.replace("fa-bars", "fa-times");
+      } else {
+        toggle_bar.firstElementChild.classList.replace("fa-times", "fa-bars");
+      }
+      sidebar.classList.toggle("sidebaractive")
+    })
+  </script>
+  </script>
+  <script type="text/javascript">
+    const {
+      createApp
+    } = Vue
+
+    // 
+
+    createApp({
+
+      methods: {
+        previewUpload(e) {
+          document.querySelector("[name='change-pfp']").click();
+        },
+
+        saveUpload(e) {
+          const form = new FormData();
+          const img = this.imageToUpload;
+          const reader = new FileReader();
+          reader.readAsDataURL(img);
+          form.append("pfp", img)
+
+          // submit to this page with post on request
+          // fetch 
+          fetch('./upload-gallery.php', {
+              method: "POST",
+              body: form,
+            })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(data => {
+              // Do something with the JSON data
+              console.log(data);
+              alert("Profile Picture Updated")
+              window.location.reload();
+            })
+            .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+            });
+
+        },
+
+        setPreview(e) {
+          const file = e.currentTarget.files[0];
+
+          if (file.type.startsWith('image/')) {
+            // Create a new FileReader object
+            const reader = new FileReader();
+
+            // When the FileReader has loaded the image, set the preview element's source to the image data
+            reader.addEventListener('load', () => {
+              // create random id
+              document.querySelector(".pfp").src = reader.result;
+              this.imageToUpload = file;;
+            });
+
+            // Read the image file as a data URL
+            reader.readAsDataURL(file);
+          }
+        },
+      },
+      data() {
+        return {
+          imageToUpload: null,
+          result: null
+        }
+      }
+    }).mount('#root')
+  </script>
+
 </body>
 
 </html>

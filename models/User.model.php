@@ -46,4 +46,29 @@ class User extends DatabaseHandler
       }
     }
   }
+
+  public function changeUserProfilePic(string $url)
+  {
+    $conn = $this::connect();
+    $user_id = $_SESSION['user']['id'];
+
+    $sql = "UPDATE users SET profile_pic_url = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    try {
+      $stmt->execute([$url, $user_id]);
+      return [true, "Profile picture updated successfully"];
+    } catch (PDOException $e) {
+      return [false, $e->getMessage()];
+    }
+  }
+
+  public function getUserById(int $user_id)
+  {
+    $conn = $this::connect();
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$user_id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
+  }
 }
