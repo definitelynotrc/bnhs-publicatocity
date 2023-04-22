@@ -200,7 +200,8 @@ if ($readOnly) {
           if (isset($context["gallery"]) && count($context["gallery"])) {
             foreach ($context["gallery"] as $gallery) {
               echo "<div class='img__container'>";
-              if (!$readOnly || !$visitorOnly) {
+              if ($readOnly || $visitorOnly) {
+              } else {
                 echo "<div v-on:click='deletePhoto({$gallery["id"]})' class='overlay-delete'><i class='fa fa-trash'></i></div>";
               }
               echo "<img src='./{$gallery["gallery_url"]}' alt='Photo from {$gallery["id"]}'>";

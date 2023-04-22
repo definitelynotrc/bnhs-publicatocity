@@ -15,9 +15,6 @@ class ProfileController extends Controller
         $user = new User();
         $result = $user->getUserById($_GET['id']);
         if (!$result) {
-          // redirect to 404 page
-          // header('Location: /404.php');
-          // render 404 page
           $this->context['404'] = true;
           return;
         } else {

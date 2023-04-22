@@ -302,7 +302,7 @@ a {
   width: 100%;
 }
 
-.hero .img__container {
+.hero .img__container:not(:has(.uploader)) {
   max-width: 280px;
   max-height: 280px;
   min-height: 280px;
@@ -390,7 +390,7 @@ a {
   cursor: pointer;
 }
 
-.hero .img__container:hover img {
+.hero .img__container:hover:has(.overlay-delete) img {
   /* transform: scale(0.5); */
   background: #047dd4;
   object-fit: contain;
