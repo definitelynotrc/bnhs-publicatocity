@@ -72,8 +72,8 @@ CREATE TABLE
 
 --
 
-CREATE TABLE `EVENT`(`ID` INT(11) NOT NULL, `EVENT_NAME` 
-TEXT NOT NULL, `ASSIGNED_DATE` 
+CREATE TABLE `event`(`id` INT(11) NOT NULL, `event_name` 
+TEXT NOT NULL, `assigned_date` 
 	date NOT NULL,
 	`created_at` datetime NOT NULL DEFAULT current_timestamp(),
 	`updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp()
