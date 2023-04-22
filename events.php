@@ -54,7 +54,7 @@ $events = $event->getEvents();
       </small> Events
     </h1>
 
-    <div id="calendar" style="max-height: 80vh"></div>
+    <div id="calendar" style="max-height: 60vh; max-width: 70%;" class="mx-auto mt-5"></div>
 
   </div>
 

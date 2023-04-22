@@ -32,7 +32,7 @@ class ProfileController extends Controller
         }
       } else {
         // redirect to 404 page
-        $this->context['404'] = true;
+        header('Location: /login.php');
         return;
       }
     }

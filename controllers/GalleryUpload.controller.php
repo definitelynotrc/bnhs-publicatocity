@@ -4,6 +4,7 @@ require_once 'Controller.php';
 require_once 'models/User.model.php';
 require_once 'models/UserGallery.model.php';
 
+
 class UploadGalleryController extends Controller
 {
 
@@ -15,6 +16,8 @@ class UploadGalleryController extends Controller
 
   public function post()
   {
+
+    $MAX_UPLOAD = 10;
     $this->verifyLogin();
 
     if (isset($_FILES['pfp'])) {
@@ -56,16 +59,16 @@ class UploadGalleryController extends Controller
     if (isset($_FILES['image-to-upload-1'])) {
       // count files first 
       $count = count($_FILES);
-      if ($count > 5) {
-        echo json_encode(["success" => false, "message" => "You can only upload 5 images at a time."]);
+      if ($count > $MAX_UPLOAD) {
+        echo json_encode(["success" => false, "message" => "You can only upload $MAX_UPLOAD images at a time."]);
         return;
       }
 
       $userGallery = new UserGallery();
       $currentPhotoCount = $userGallery->getPhotosFromGallery($_SESSION['user']['id']);
 
-      if (count($currentPhotoCount) >= 5) {
-        echo json_encode(["success" => false, "message" => "You can only upload 5 images at your account."]);
+      if (count($currentPhotoCount) >= $MAX_UPLOAD) {
+        echo json_encode(["success" => false, "message" => "You can only upload $MAX_UPLOAD images at your account."]);
         // return;
         return;
       }
