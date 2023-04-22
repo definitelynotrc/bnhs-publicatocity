@@ -7,7 +7,7 @@ class Events extends DatabaseHandler
   public function createEvent(string $eventName, string $assigned_date)
   {
     $conn = $this::connect();
-    $sql = "INSERT INTO events (event_name, assigned_date) VALUES (?, ?)";
+    $sql = "INSERT INTO event (event_name, assigned_date) VALUES (?, ?)";
     $stmt = $conn->prepare($sql);
     try {
       $stmt->execute([$eventName, $assigned_date]);
@@ -25,7 +25,7 @@ class Events extends DatabaseHandler
   public function getEvents()
   {
     $conn = $this::connect();
-    $sql = "SELECT * FROM events";
+    $sql = "SELECT * FROM event";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

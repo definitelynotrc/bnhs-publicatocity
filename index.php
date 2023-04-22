@@ -91,7 +91,7 @@ $isLoggedIn = isset($_SESSION['user']);
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/nav.css" />
-  <title>dropdown Menu</title>
+  <title>Home</title>
 </head>
 
 <body>
@@ -102,8 +102,8 @@ $isLoggedIn = isset($_SESSION['user']);
       <li><a href="userprofile.php">Profile</a></li>
       <li><a href="terms.html">Terms and Policies</a></li>
       <li><a href="authors.php">Author</a></li>
-      <li><a href="authors.php">Events</a></li>
-      <li><a href="authors.php">Announcements</a></li>
+      <li><a href="events.php">Events</a></li>
+      <li><a href="announcement.php">Announcements</a></li>
       <li>
         <?php if ($isLoggedIn) { ?>
           <a href="#">Settings <i class="fas fa-caret-down"></i></a>
