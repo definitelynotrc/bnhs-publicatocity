@@ -54,8 +54,22 @@ class UploadGalleryController extends Controller
     }
 
     if (isset($_FILES['image-to-upload-1'])) {
+      // count files first 
+      $count = count($_FILES);
+      if ($count > 5) {
+        echo json_encode(["success" => false, "message" => "You can only upload 5 images at a time."]);
+        return;
+      }
+
       $userGallery = new UserGallery();
-      // get all the images uploaded
+      $currentPhotoCount = $userGallery->getPhotosFromGallery($_SESSION['user']['id']);
+
+      if (count($currentPhotoCount) >= 5) {
+        echo json_encode(["success" => false, "message" => "You can only upload 5 images at your account."]);
+        // return;
+        return;
+      }
+
       $isUploaded = $userGallery->uploadImage($_SESSION['user']['id'], $_FILES);
       header('Content-Type: application/json; charset=utf-8');
       echo json_encode($isUploaded);

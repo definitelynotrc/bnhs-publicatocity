@@ -43,9 +43,11 @@ a {
   z-index: 1;
 }
 
-.header__wrapper .cols__container .left__col .img__container:hover {
+.header__wrapper .cols__container .left__col .img__container:hover:not(.readonly) {
   cursor: pointer !important;
 }
+
+
 
 .header__wrapper .cols__container .left__col .img__container img {
   width: 120px;

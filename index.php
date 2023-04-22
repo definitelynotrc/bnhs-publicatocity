@@ -90,6 +90,7 @@ $isLoggedIn = isset($_SESSION['user']);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/nav.css" />
   <title>dropdown Menu</title>
 </head>
 
@@ -97,18 +98,19 @@ $isLoggedIn = isset($_SESSION['user']);
   <div class="menu-bar">
     <h1 class="logo"><img src="./img/logo.png" /><span>.</span></h1>
     <ul>
-      <li><a id="haha" href="nav.html">Home</a></li>
+      <li><a id="haha" href="#">Home</a></li>
       <li><a href="userprofile.php">Profile</a></li>
       <li><a href="terms.html">Terms and Policies</a></li>
-      <li><a href="./authors2.html">Author</a></li>
-
+      <li><a href="authors.php">Author</a></li>
+      <li><a href="authors.php">Events</a></li>
+      <li><a href="authors.php">Announcements</a></li>
       <li>
         <?php if ($isLoggedIn) { ?>
           <a href="#">Settings <i class="fas fa-caret-down"></i></a>
           <div class="dropdown-menu">
             <ul>
               <li>
-                <a href="login.html" class="btn btn-info btn-lg">
+                <a href="/logout.php" class="btn btn-info btn-lg">
                   <span class="glyphicon glyphicon-log-out"></span> Log out
                 </a>
               </li>

@@ -102,11 +102,13 @@ $isLoggedIn = isset($_SESSION['user']);
 <div class="sidebar ">
 
   <ul class="nav-links">
-    <li><a href="./index.html">Home</a></li>
+    <li><a href="/">Home</a></li>
     <li><a href="#">About Us</a></li>
     <li><a href="#">Services</a></li>
     <li><a href="./gallery.php">Gallery</a></li>
     <li><a href="#">Contact Us</a></li>
+    <li><a href="/logout.php">Log Out</a></li>
+
   </ul>
 
   <ul class="social-links">
@@ -160,7 +162,7 @@ $isLoggedIn = isset($_SESSION['user']);
         <nav>
           <ul>
             <li><a href="./userprofile.php">photos</a></li>
-            <li><a href="./gallery.php" class="active">galleries</a></li>
+            <li><a href="#" class="active">galleries</a></li>
           </ul>
           <template v-if="imageToUpload != null">
             <button v-on:click="saveUpload2">Save Profile Picture</button>

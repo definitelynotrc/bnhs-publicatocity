@@ -9,6 +9,7 @@ body {
 .sidebaractive {
     transform: translate(0%) !important;
 }
+
 .sidebar {
 	position:fixed;
     width: 300px;

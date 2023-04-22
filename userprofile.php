@@ -1,8 +1,28 @@
 <?php
 require_once "controllers/Profile.controller.php";
 
+
+if (isset($context["404"])) {
+  // only the content
+  require_once "404.php";
+  die();
+}
+
 $isLoggedIn = isset($_SESSION['user']);
 $profile_pic = isset($context["pfp"]) ? $context["pfp"] : "./img/cyan.png";
+$visitorOnly = isset($context["visitorOnly"]) ? $context["visitorOnly"] : false;
+$readOnly = isset($context["readOnly"]) ? $context["readOnly"] : false;
+// render 404 
+$user = $context["user"];
+
+if ($readOnly) {
+  $username = $user['username'];
+  $fullname = $user['first_name'] . " " . $user["last_name"];
+} else {
+  $username = $visitorOnly ? $user['username'] : $_SESSION['user']['username'];
+  $fullname = $visitorOnly ? $user['first_name'] . " " . $user["last_name"] : $_SESSION['user']['first_name'] . " " . $_SESSION['user']['last_name'];
+}
+
 
 ?>
 
@@ -13,12 +33,13 @@ $profile_pic = isset($context["pfp"]) ? $context["pfp"] : "./img/cyan.png";
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>@<?= $_SESSION["user"]["username"] ?> | Profile Picture </title>
+  <title>@<?= $username ?> | Profile Picture </title>
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
   <!-- CSS -->
   <link rel="stylesheet" href="./css/userprofile.css" />
   <link rel="stylesheet" href="./css/TOGGLE.css" />
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js'></script>
 </head>
 <style>
   *,
@@ -98,18 +119,19 @@ $profile_pic = isset($context["pfp"]) ? $context["pfp"] : "./img/cyan.png";
 <div class="sidebar ">
 
   <ul class="nav-links">
-    <li><a href="./index.html">Home</a></li>
+    <li><a href="/">Home</a></li>
     <li><a href="#">About Us</a></li>
     <li><a href="#">Services</a></li>
     <li><a href="./gallery.php">Gallery</a></li>
     <li><a href="#">Contact Us</a></li>
+    <li><a href="/logout.php">Log Out</a></li>
   </ul>
 
   <ul class="social-links">
-    <li><a href=""><i class="fa fa-facebook"></i></a></li>
-    <li><a href=""><i class="fa fa-twitter"></i></a></li>
-    <li><a href=""><i class="fa fa-instagram"></i></a></li>
-    <li><a href=""><i class="fa fa-linkedin"></i></a></li>
+    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
   </ul>
 </div>
 
@@ -118,16 +140,18 @@ $profile_pic = isset($context["pfp"]) ? $context["pfp"] : "./img/cyan.png";
     <header></header>
     <div class="cols__container">
       <div class="left__col">
-        <div class="img__container">
-          <div class="overlay change-pfp-btn" v-on:click="previewUpload">
-            <i class='fa fa-pen' style="color: #ffffff90; margin-top: 70%;"></i>
-          </div>
+        <div class="img__container <?= $readOnly ? 'readonly' : '' ?>">
+          <?php if (!$readOnly) { ?>
+            <div class="overlay change-pfp-btn" v-on:click="previewUpload">
+              <i class='fa fa-pen' style="color: #ffffff90; margin-top: 70%;"></i>
+            </div>
+          <?php } ?>
           <img src="<?= $profile_pic ?>" class="pfp" alt="user-profile" />
           <span></span>
           <input type="file" value="" v-on:change="setPreview" name="change-pfp" hidden>
         </div>
-        <h2><?= $_SESSION["user"]["first_name"] ?> <?= $_SESSION["user"]["last_name"] ?></h2>
-        <p>@<?= $_SESSION["user"]["username"] ?></p>
+        <h2><?= $fullname ?></h2>
+        <p>@<?= $username ?></p>
         <p>PUBLICATOCITY MEMBER</p>
         <!-- <p>cornhub.com</p> -->
 
@@ -155,14 +179,19 @@ $profile_pic = isset($context["pfp"]) ? $context["pfp"] : "./img/cyan.png";
       <div class="right__col">
         <nav>
           <ul>
-            <li><a href="./userprofile.php" class="active">photos</a></li>
-            <li><a href="./gallery.php">galleries</a></li>
+            <li><a href="#" class="active">photos</a></li>
+            <?= $visitorOnly || $readOnly ? '' : '<li><a href="./gallery.php">galleries</a></li>' ?>
           </ul>
           <template v-if="imageToUpload != null">
             <button v-on:click="saveUpload">Save Profile Picture</button>
           </template>
           <template v-else>
-            <button class="<?= $isLoggedIn ? "secondary" : "Follow" ?>"><?= $isLoggedIn ? "Edit Profile" : "Follow" ?></button>
+            <?php if ($readOnly) { ?>
+              <button class="Follow" v-on:click="follow">Follow</button>
+            <?php } else { ?>
+
+              <button class="<?= $isLoggedIn ? "secondary" : "Follow" ?>"><?= $isLoggedIn ? "Edit Profile" : "Follow" ?></button>
+            <?php } ?>
           </template>
         </nav>
         <div class="hero">
