@@ -64,4 +64,25 @@ class UserGallery extends DatabaseHandler
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $result;
   }
+
+  public function getPhotosFromGalleryById(int $photo_id)
+  {
+    $conn = $this::connect();
+    $sql = "SELECT * FROM user_gallery WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$photo_id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
+  }
+
+  public function deletePhotoFromGallery(int $user_id, int $photo_id)
+  {
+
+    $photo = $this->getPhotosFromGalleryById($photo_id);
+    $conn = $this::connect();
+    $sql = "DELETE FROM user_gallery WHERE user = ? AND id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$user_id, $photo["id"]]);
+    return ["success" => True, "message" => "Photo deleted successfully.", "path" => $photo["gallery_url"]];
+  }
 }

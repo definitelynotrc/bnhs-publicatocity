@@ -81,6 +81,21 @@ class UploadGalleryController extends Controller
 
     echo json_encode($this->context);
   }
+
+  public function delete()
+  {
+    $this->verifyLogin();
+    $deleteRes = [];
+    parse_str(file_get_contents("php://input"), $deleteRes);
+    $deleteData = json_decode(key($deleteRes));
+    $userGallery = new UserGallery();
+    $isDeleted = $userGallery->deletePhotoFromGallery($_SESSION['user']['id'], $deleteData->id);
+    // delete also the photo on uploads folder
+    unlink($isDeleted["path"]);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($isDeleted);
+    return;
+  }
 }
 $galleryUpload = new UploadGalleryController();
 $context = $galleryUpload->getContext();

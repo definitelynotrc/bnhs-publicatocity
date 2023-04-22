@@ -200,7 +200,10 @@ if ($readOnly) {
           if (isset($context["gallery"]) && count($context["gallery"])) {
             foreach ($context["gallery"] as $gallery) {
               echo "<div class='img__container'>";
-              echo "<img src='./{$gallery["gallery_url"]}' alt=''>";
+              if (!$readOnly || !$visitorOnly) {
+                echo "<div v-on:click='deletePhoto({$gallery["id"]})' class='overlay-delete'><i class='fa fa-trash'></i></div>";
+              }
+              echo "<img src='./{$gallery["gallery_url"]}' alt='Photo from {$gallery["id"]}'>";
               echo "</div>";
             }
           } else {
@@ -294,6 +297,36 @@ if ($readOnly) {
             reader.readAsDataURL(file);
           }
         },
+
+        deletePhoto(id) {
+
+          // fetch
+          fetch('./upload-gallery.php', {
+              method: "DELETE",
+              body: JSON.stringify({
+                id: id
+              }),
+            })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(data => {
+              // Do something with the JSON data
+              console.log(data);
+              alert("Photo Deleted")
+              window.location.reload();
+            })
+            .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+            });
+
+          // delete photo from gallery
+          // reload page
+        }
+
       },
       data() {
         return {

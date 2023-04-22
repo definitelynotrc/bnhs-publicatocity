@@ -308,12 +308,17 @@ a {
   min-height: 280px;
   min-width: 280px;
   margin-left: 0;
+  overflow: hidden;
+  transition: .2s ease-in-out;
+
 }
 
 .hero .img__container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: .2s ease-in-out;
+
 }
 
 .hero .img__container .uploader:hover {
@@ -366,3 +371,34 @@ a {
   color: #873715;
 }
 
+
+.overlay-delete {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  max-width: 280px;
+  max-height: 280px;
+  min-height: 280px;
+  min-width: 280px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero .img__container:hover .overlay-delete {
+  display: flex;
+  cursor: pointer;
+}
+
+.hero .img__container:hover img {
+  /* transform: scale(0.5); */
+  background: #047dd4;
+  object-fit: contain;
+  transition: .2s ease-in-out;
+
+}
+
+.overlay-delete i {
+  color: #e25c23;
+  font-size: 3rem;
+}
